@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 const App = () => {
-  const [userData, setUserData] = useState([]);
+  const [usersData, setUsersData] = useState([]);
   const [formData, setFormData] = useState({
     fName: '',
     lName: '',
@@ -12,10 +12,24 @@ const App = () => {
     grade: '',
   });
 
+  const [isEditingId, setIsEditingId] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setUserData([...userData, {...formData, uId: uuidv4()}]);
-    console.log(userData);
+    
+    if (isEditingId === '') {
+      setUsersData([...usersData, {...formData, uId: uuidv4()}]);
+    } else {
+      setUsersData(usersData.map((user) => {
+        if(isEditingId === user.uId) {
+            return {
+              ...formData,
+              uId: isEditingId
+            }
+        } 
+        return user
+    }))
+    }
 
     setFormData({
         fName: '',
@@ -24,7 +38,32 @@ const App = () => {
         totalScore: 0,
         grade: '',
       });
+
+      setIsEditingId('')
   };
+
+  const handleDelete = (uId) => {
+    setUsersData(
+      [...usersData.filter((data) => {
+          return data.uId !== uId
+      })]
+  )};
+
+  const setUpUpdate = (uId) => {
+    const user = usersData.filter((item) => item.uId === uId);
+
+    const itemToUpdate = user[0]
+    
+    setFormData({ 
+      fName: itemToUpdate.fName,
+      lName: itemToUpdate.lName,
+      subject: itemToUpdate.subject,
+      totalScore: itemToUpdate.totalScore,
+      grade: itemToUpdate.grade,
+    });
+
+    setIsEditingId(uId)
+  }
 
   return (
     <div className="relative sm:-8 p-4 bg-[#4369B2] min-h-screen flex flex-col">
@@ -43,7 +82,7 @@ const App = () => {
             </tr>
           </thead>
           <tbody>
-            {userData.map((user) => (
+            {usersData.map((user) => (
               <tr key={user.uId}>
                 <td>{user.uId}</td>
                 <td>{user.fName}</td>
@@ -52,8 +91,8 @@ const App = () => {
                 <td>{user.totalScore}</td>
                 <td>{user.grade}</td>
                 <td>
-                  <button type="button">Update</button>
-                  <button type="button">Delete</button>
+                  <button type="button" onClick={() => setUpUpdate(user.uId)}>Update</button>
+                  <button type="button" onClick={() => handleDelete(user.uId)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -76,11 +115,11 @@ const App = () => {
             value={formData.subject}
             onChange={(e) => setFormData({...formData, subject: e.target.value})}
           />
-          <input type="number" name='total-score' placeholder='Enter Your Total Score' required
+          <input type="number" name='total-score' placeholder='Enter Your Total Score Min - 0 | Max - 100' min={0} max="100" required
             value={formData.totalScore}
             onChange={(e) => setFormData({...formData, totalScore: e.target.value})}
           />
-          <input type="text" name='grade' placeholder='Enter Your Grade' required
+          <input type="text" name='grade' placeholder='Enter Your Grade A | B | C' required
             value={formData.grade}
             onChange={(e) => setFormData({...formData, grade: e.target.value})}
           />
