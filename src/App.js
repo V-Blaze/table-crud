@@ -1,23 +1,65 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 const App = () => {
+  const [userData, setUserData] = useState([]);
   const [formData, setFormData] = useState({
     fName: '',
     lName: '',
     subject: '',
     totalScore: 0,
     grade: '',
-  })
+  });
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(formData)
-  }
+    e.preventDefault();
+    setUserData([...userData, {...formData, uId: uuidv4()}]);
+    console.log(userData);
+
+    setFormData({
+        fName: '',
+        lName: '',
+        subject: '',
+        totalScore: 0,
+        grade: '',
+      });
+  };
 
   return (
-    <div className="relative sm:-8 p-4 bg-[#4369B2] min-h-screen flex flex-row">
-      <h2>Hello</h2>
+    <div className="relative sm:-8 p-4 bg-[#4369B2] min-h-screen flex flex-col">
+      <h2>TABLE CRUD</h2>
+      <div>
+        <table>
+          <thead>
+            <tr>              
+              <td>U-ID</td>
+              <td>First Name </td>
+              <td>Last Name</td>
+              <td>Subject</td>
+              <td>Score</td>
+              <td>Grade</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            {userData.map((user) => (
+              <tr key={user.uId}>
+                <td>{user.uId}</td>
+                <td>{user.fName}</td>
+                <td>{user.lName}</td>
+                <td>{user.subject}</td>
+                <td>{user.totalScore}</td>
+                <td>{user.grade}</td>
+                <td>
+                  <button type="button">Update</button>
+                  <button type="button">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div>
         <h3>Create A New Student Record</h3>
