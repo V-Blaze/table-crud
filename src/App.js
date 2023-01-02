@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
+import TableData from './components/TableData';
+import UserForm from './components/UserForm';
 
 const App = () => {
   const [usersData, setUsersData] = useState([]);
@@ -66,13 +68,13 @@ const App = () => {
   }
 
   return (
-    <div className="relative sm:-8 p-4 bg-[#4369B2] min-h-screen flex flex-col">
-      <h2>TABLE CRUD</h2>
-      <div>
-        <table>
-          <thead>
-            <tr>              
-              <td>U-ID</td>
+    <div className=" sm:-8 p-4 bg-[#4369B2] min-h-screen flex flex-col items-center">
+      <h2 className="flex text-white font-extrabold self-center mb-6 ">TABLE CRUD</h2>
+      <div className=" text-white self-center">
+        <table className="border rounded-lg border-black">
+          <thead className="border border-collapse border-black">
+            <tr className="grid grid-cols-7 gap-3  py-4 font-bold border">              
+              <td className="">U-ID</td>
               <td>First Name </td>
               <td>Last Name</td>
               <td>Subject</td>
@@ -83,48 +85,25 @@ const App = () => {
           </thead>
           <tbody>
             {usersData.map((user) => (
-              <tr key={user.uId}>
-                <td>{user.uId}</td>
-                <td>{user.fName}</td>
-                <td>{user.lName}</td>
-                <td>{user.subject}</td>
-                <td>{user.totalScore}</td>
-                <td>{user.grade}</td>
-                <td>
-                  <button type="button" onClick={() => setUpUpdate(user.uId)}>Update</button>
-                  <button type="button" onClick={() => handleDelete(user.uId)}>Delete</button>
-                </td>
-              </tr>
+              <TableData
+                key={user.uId}
+                user={user}
+                handleDelete={handleDelete}
+                setUpUpdate={setUpUpdate}
+              />
             ))}
           </tbody>
         </table>
       </div>
 
-      <div>
-        <h3>Create A New Student Record</h3>
-        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-          <input type="text" name='first-name' placeholder='Enter Your First Name' required
-            value={formData.fName}
-            onChange={(e) => setFormData({...formData, fName: e.target.value})}
-          />
-          <input type="text" name='last-name' placeholder='Enter Your Last Name' required
-            value={formData.lName}
-            onChange={(e) => setFormData({...formData, lName: e.target.value})}
-          />
-          <input type="text" name='subject' placeholder='Enter Your Favourite Subject' required
-            value={formData.subject}
-            onChange={(e) => setFormData({...formData, subject: e.target.value})}
-          />
-          <input type="number" name='total-score' placeholder='Enter Your Total Score Min - 0 | Max - 100' min={0} max="100" required
-            value={formData.totalScore}
-            onChange={(e) => setFormData({...formData, totalScore: e.target.value})}
-          />
-          <input type="text" name='grade' placeholder='Enter Your Grade A | B | C' required
-            value={formData.grade}
-            onChange={(e) => setFormData({...formData, grade: e.target.value})}
-          />
-          <button type="submit">Add</button>
-        </form>
+      <div className="flex flex-col w-3/4 mx-auto self-center absolute bottom-0 z-30">
+        <h3 className="self-center text-gray-300 text-2xl font-bold italic mb-2">Create A New Student Record</h3>
+        <UserForm
+          handleSubmit={handleSubmit}
+          setFormData={setFormData}
+          formData={formData}
+          className=" self-center"
+        />
       </div>
   </div>
   );
