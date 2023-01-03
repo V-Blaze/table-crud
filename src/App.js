@@ -5,7 +5,16 @@ import TableData from './components/TableData';
 import UserForm from './components/UserForm';
 
 const App = () => {
-  const [usersData, setUsersData] = useState([]);
+  const [usersData, setUsersData] = useState([
+    {
+      fName: 'Valentine',
+      lName: 'Blaze',
+      subject: 'English',
+      totalScore: '95',
+      grade: 'A',
+      uId: 'ff4b6c39-0791-45b5-acba-0327acf8b165'
+    },
+  ]);
   const [formData, setFormData] = useState({
     fName: '',
     lName: '',
@@ -55,7 +64,7 @@ const App = () => {
     const user = usersData.filter((item) => item.uId === uId);
 
     const itemToUpdate = user[0]
-    
+    console.log(itemToUpdate)
     setFormData({ 
       fName: itemToUpdate.fName,
       lName: itemToUpdate.lName,
@@ -74,7 +83,7 @@ const App = () => {
         <table className="border rounded-lg border-black">
           <thead className="border border-collapse border-black">
             <tr className="grid grid-cols-7 gap-3  py-4 font-bold border">              
-              <td className="">U-ID</td>
+              <td>U-ID</td>
               <td>First Name </td>
               <td>Last Name</td>
               <td>Subject</td>
